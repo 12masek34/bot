@@ -5,9 +5,9 @@ from flask import Flask
 from flask.views import MethodView
 from flask import request
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
+# from dotenv import load_dotenv
+#
+# load_dotenv()
 
 app = Flask(__name__)
 TOKEN = os.environ.get('TOKEN')
