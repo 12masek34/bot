@@ -132,7 +132,6 @@ class BotAPI(MethodView):
                 else:
                     rsp = get_data_from_api(temporary_message[0])
                     if rsp:
-                        message = rsp['title'] + '\n' + '\n' + rsp['text']
                         send_message(chat_id, message, rsp)
             else:
                 send_message(chat_id, text)
@@ -140,7 +139,7 @@ class BotAPI(MethodView):
             if rsp['callback_query']:
                 chat_id = rsp['callback_query']['message']['chat']['id']
                 detail_url = 'blogs/' + rsp['callback_query']['data']
-                data = get_data_from_api(detail_url)['text']
+                data = get_data_from_api(detail_url)['title'] + '\n' + '\n' + get_data_from_api(detail_url)['text']
                 send_message(chat_id, data)
             return f'<h1>{rsp}<H1/>'
         return f'<h1>{rsp}<H1/>'
