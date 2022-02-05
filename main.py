@@ -90,7 +90,7 @@ def parse_text(text_message):
     message = 'Неверный запрос'
     if '/' in text_message:
         if '/start' in text_message or '/help' in text_message:
-            message = 'Что бы начать нажмите /go.'
+            message = 'Меня зовут Дмитрий Мартысь. Этот бот расскажет обо мне.'
             return message
         elif text_message.replace('/', '').isdigit():
             command = text_message.replace('/', '')
