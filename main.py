@@ -5,9 +5,9 @@ from flask import Flask
 from flask.views import MethodView
 from flask import request
 import os
-# from dotenv import load_dotenv
-#
-# load_dotenv()
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 TOKEN = os.environ.get('TOKEN')
@@ -15,13 +15,13 @@ API_URL = os.environ.get('API_URL')
 TELEGRAM_URL = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
 
 
-@app.route('/', methods=['POST', 'GET'])
-def index():
-    if request.method == 'POST':
-        rsp = request.get_json()
-        print(rsp)
-        return f'<h1>Hi bot {rsp} <H1/>'
-    return '<h1>Hi bot<H1/>'
+# @app.route('/', methods=['POST', 'GET'])
+# def index():
+#     if request.method == 'POST':
+#         rsp = request.get_json()
+#         print(rsp)
+#         return f'<h1>Hi bot {rsp} <H1/>'
+#     return '<h1>Hi bot<H1/>'
 
 def get_data_from_api(command='blogs/'):
     url = API_URL + command
@@ -29,27 +29,30 @@ def get_data_from_api(command='blogs/'):
     try:
         r = session.get(url).json()
     except ValueError:
-        r = {'text': 'ERROR'}
+        r = None
     return r
 
 
 def get_keyboard(rsp=None):
-    if rsp is not None:
-        keyboard = (
-            {'inline_keyboard': [[]]})
-        for r in rsp:
-            keyboard['inline_keyboard'][0].extend([{'text': str(r['id']) + ' ' + r['title'], 'callback_data': r['id']}])
-        keyboard = json.dumps(keyboard)
-        return keyboard
-    elif rsp is None:
-        rsp = get_data_from_api()
-        keyboard = (
-            {'inline_keyboard': [[]]})
-        for r in rsp:
-            keyboard['inline_keyboard'][0].extend([{'text': str(r['id']) + ' ' + r['title'], 'callback_data': r['id']}])
-        keyboard = json.dumps(keyboard)
-        return keyboard
-    else:
+    try:
+        if rsp is not None:
+            keyboard = {'inline_keyboard': [[]]}
+            for item in rsp:
+                keyboard['inline_keyboard'][0].extend(
+                    [{'text': str(item['id']) + ' ' + item['title'], 'callback_data': ritem['id']}])
+            keyboard = json.dumps(keyboard)
+            return keyboard
+        elif rsp is None:
+            rsp = get_data_from_api()
+            keyboard = (
+                {'inline_keyboard': [[]]})
+            for r in rsp:
+                keyboard['inline_keyboard'][0].extend([{'text': str(r['id']) + ' ' + r['title'], 'callback_data': r['id']}])
+            keyboard = json.dumps(keyboard)
+            return keyboard
+        else:
+            return None
+    except TypeError:
         return None
 
 
@@ -84,7 +87,7 @@ def send_message(chat_id, message, rsp=None):
 def parse_text(text_message):
     '''/start, /help, /go '''
     addresses = {
-        'go': 'blogs/',
+        'start': 'blogs/',
     }
     command_pattern_word = r'/\w+'
     message = 'Неверный запрос'
