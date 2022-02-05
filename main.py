@@ -132,7 +132,7 @@ class BotAPI(MethodView):
                 else:
                     rsp = get_data_from_api(temporary_message[0])
                     if rsp:
-                        send_message(chat_id, rsp['text'], rsp)
+                        send_message(chat_id, rsp['title'] + '\n' + rsp['text'], rsp)
             else:
                 send_message(chat_id, text)
         except KeyError:
