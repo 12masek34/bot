@@ -15,13 +15,13 @@ API_URL = os.environ.get('API_URL')
 TELEGRAM_URL = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
 
 
-# @app.route('/', methods=['POST', 'GET'])
-# def index():
-#     if request.method == 'POST':
-#         rsp = request.get_json()
-#         print(rsp)
-#         return f'<h1>Hi bot {rsp} <H1/>'
-#     return '<h1>Hi bot<H1/>'
+@app.route('/', methods=['POST', 'GET'])
+def index():
+    if request.method == 'POST':
+        rsp = request.get_json()
+        print(rsp)
+        return f'<h1>Hi bot {rsp} <H1/>'
+    return '<h1>Hi bot<H1/>'
 
 def get_data_from_api(command='blogs/'):
     url = API_URL + command
